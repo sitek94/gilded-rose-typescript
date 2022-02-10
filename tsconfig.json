@@ -6,5 +6,8 @@
     "noImplicitAny": false,
     "sourceMap": false,
     "baseUrl": "./src"
+  },
+  "ts-node": {
+    "require": ["tsconfig-paths/register"]
   }
 }
