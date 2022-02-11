@@ -1,7 +1,7 @@
 {
   "name": "gilded-rose-typescript",
   "scripts": {
-    "test": "jest",
+    "test": "jest --watch",
     "text": "ts-node src/golden-master-text-test.ts"
   },
   "devDependencies": {
