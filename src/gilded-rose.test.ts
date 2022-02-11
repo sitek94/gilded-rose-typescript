@@ -163,5 +163,11 @@ describe('Gilded Rose', () => {
         ]
       `);
     });
+
+    it.skip('should NOT decrease `sellIn` and `quality` of "Sulfuras"', () => {});
+    it.skip('should increase `quality` of "Backstage passes" by 1, when `sellIn > 10`', () => {});
+    it.skip('should increase `quality` of "Backstage passes" by 2, when `5 < sellIn <= 10`', () => {});
+    it.skip('should increase `quality` of "Backstage passes" by 3 when `0 < sellIn <= 5``', () => {});
+    it.skip('should set `quality` of "Backstage passes" to 0, when `sellIn <= 0`', () => {});
   });
 });
