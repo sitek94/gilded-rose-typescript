@@ -7,7 +7,13 @@ export class GildedRose {
   items: Array<Item>
 
   constructor(items = [] as Array<Item>) {
-    this.items = items
+    this.items = items.map((item) => {
+      const { name, sellIn, quality } = item
+      if (name === SULFURAS) {
+        return new SulfurasItem(name, sellIn, quality)
+      }
+      return item
+    })
   }
 
   updateQuality() {
@@ -36,9 +42,7 @@ export class Item {
       this.name != 'Backstage passes to a TAFKAL80ETC concert'
     ) {
       if (this.quality > 0) {
-        if (this.name != 'Sulfuras, Hand of Ragnaros') {
-          this.quality = this.quality - 1
-        }
+        this.quality = this.quality - 1
       }
     } else {
       if (this.quality < 50) {
@@ -57,16 +61,12 @@ export class Item {
         }
       }
     }
-    if (this.name != 'Sulfuras, Hand of Ragnaros') {
-      this.sellIn = this.sellIn - 1
-    }
+    this.sellIn = this.sellIn - 1
     if (this.sellIn < 0) {
       if (this.name != 'Aged Brie') {
         if (this.name != 'Backstage passes to a TAFKAL80ETC concert') {
           if (this.quality > 0) {
-            if (this.name != 'Sulfuras, Hand of Ragnaros') {
-              this.quality = this.quality - 1
-            }
+            this.quality = this.quality - 1
           }
         } else {
           this.quality = this.quality - this.quality
@@ -78,4 +78,9 @@ export class Item {
       }
     }
   }
+}
+
+export class SulfurasItem extends Item {
+  // "Sulfuras" never has to be sold or decreases in quality
+  updateQuality() {}
 }
