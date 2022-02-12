@@ -1,8 +1,22 @@
 # Gilded Rose Typescript
 
-> 🚧 &nbsp; work in progress &nbsp;🚧 - I'm not sure if my current approach is not violating the rules, since I
-> added `updateQuality` method to the Item class, but I'll probably finish it like this anyway, and then try
-> finding a different solution.
+> 🚧 &nbsp; work in progress &nbsp;🚧
+
+## Attempts
+
+### 1. Violated Rules 🤦
+
+Code: [attempt/1-violated-rules]()
+
+The description says:
+
+> (...) do not alter the Item class
+
+And that's exactly what I did 🙈 I added `updateQuality` method to Item class, so that when `GildedRose` was
+iterating over its items, it was invoking that method. This allowed each special item to have its own 
+version of `updadeQuality` with some special conditions.
+
+Conjured Item implementation works, but I'm not really happy with this solution.
 
 ## Resources
 
