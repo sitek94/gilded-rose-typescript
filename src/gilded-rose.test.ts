@@ -1,4 +1,23 @@
-import { AGED_BRIE, GildedRose, Item } from 'gilded-rose'
+import {
+  AGED_BRIE,
+  BACKSTAGE_PASSES,
+  GildedRose,
+  Item,
+  SULFURAS,
+} from 'gilded-rose'
+
+/*
+  TODO: Consider creating helpers for tests setup, e.g.
+
+  const { items, waitDays } = setup([
+   createSulfuras(),
+   createCommonItem(5, 6)
+  ])
+
+  waitDays(3)
+
+  expect(items).toMatchInlineSnapshot('...')
+ */
 
 describe('Gilded Rose', () => {
   describe('updateQuality()', () => {
@@ -164,20 +183,174 @@ describe('Gilded Rose', () => {
       `)
     })
 
-    it.skip('should NOT decrease `sellIn` and `quality` of "Sulfuras"', () => {
-      const item: Item = new Item('Sulfuras', 0, 0)
-      const gildedRose = new GildedRose([item])
+    it('should NOT decrease `sellIn` and `quality` of "Sulfuras"', () => {
+      const items: Item[] = [
+        new Item(SULFURAS, 0, 80),
+        new Item(SULFURAS, -1, 80),
+      ]
+      const gildedRose = new GildedRose(items)
 
       gildedRose.updateQuality()
-      gildedRose.updateQuality()
-      gildedRose.updateQuality()
-      gildedRose.updateQuality()
 
-      expect(gildedRose.items[0]).toMatchInlineSnapshot()
+      expect(gildedRose.items).toMatchInlineSnapshot(`
+        Array [
+          Item {
+            "name": "Sulfuras, Hand of Ragnaros",
+            "quality": 80,
+            "sellIn": 0,
+          },
+          Item {
+            "name": "Sulfuras, Hand of Ragnaros",
+            "quality": 80,
+            "sellIn": -1,
+          },
+        ]
+      `)
     })
-    it.skip('should increase `quality` of "Backstage passes" by 1, when `sellIn > 10`', () => {})
-    it.skip('should increase `quality` of "Backstage passes" by 2, when `5 < sellIn <= 10`', () => {})
-    it.skip('should increase `quality` of "Backstage passes" by 3 when `0 < sellIn <= 5``', () => {})
-    it.skip('should set `quality` of "Backstage passes" to 0, when `sellIn <= 0`', () => {})
+
+    it('should increase `quality` of "Backstage passes" by 1, when `sellIn > 10`', () => {
+      const items: Item[] = [
+        new Item(BACKSTAGE_PASSES, 11, 0),
+        new Item(BACKSTAGE_PASSES, 12, 0),
+        new Item(BACKSTAGE_PASSES, 13, 0),
+      ]
+      const gildedRose = new GildedRose(items)
+
+      gildedRose.updateQuality()
+
+      expect(gildedRose.items).toMatchInlineSnapshot(`
+        Array [
+          Item {
+            "name": "Backstage passes to a TAFKAL80ETC concert",
+            "quality": 1,
+            "sellIn": 10,
+          },
+          Item {
+            "name": "Backstage passes to a TAFKAL80ETC concert",
+            "quality": 1,
+            "sellIn": 11,
+          },
+          Item {
+            "name": "Backstage passes to a TAFKAL80ETC concert",
+            "quality": 1,
+            "sellIn": 12,
+          },
+        ]
+      `)
+    })
+
+    it('should increase `quality` of "Backstage passes" by 2, when `5 < sellIn <= 10`', () => {
+      const items: Item[] = [
+        new Item(BACKSTAGE_PASSES, 6, 0),
+        new Item(BACKSTAGE_PASSES, 7, 0),
+        new Item(BACKSTAGE_PASSES, 8, 0),
+        new Item(BACKSTAGE_PASSES, 9, 0),
+        new Item(BACKSTAGE_PASSES, 10, 0),
+      ]
+      const gildedRose = new GildedRose(items)
+
+      gildedRose.updateQuality()
+
+      expect(gildedRose.items).toMatchInlineSnapshot(`
+        Array [
+          Item {
+            "name": "Backstage passes to a TAFKAL80ETC concert",
+            "quality": 2,
+            "sellIn": 5,
+          },
+          Item {
+            "name": "Backstage passes to a TAFKAL80ETC concert",
+            "quality": 2,
+            "sellIn": 6,
+          },
+          Item {
+            "name": "Backstage passes to a TAFKAL80ETC concert",
+            "quality": 2,
+            "sellIn": 7,
+          },
+          Item {
+            "name": "Backstage passes to a TAFKAL80ETC concert",
+            "quality": 2,
+            "sellIn": 8,
+          },
+          Item {
+            "name": "Backstage passes to a TAFKAL80ETC concert",
+            "quality": 2,
+            "sellIn": 9,
+          },
+        ]
+      `)
+    })
+
+    it('should increase `quality` of "Backstage passes" by 3 when `0 < sellIn <= 5``', () => {
+      const items: Item[] = [
+        new Item(BACKSTAGE_PASSES, 1, 0),
+        new Item(BACKSTAGE_PASSES, 2, 0),
+        new Item(BACKSTAGE_PASSES, 3, 0),
+        new Item(BACKSTAGE_PASSES, 4, 0),
+      ]
+      const gildedRose = new GildedRose(items)
+
+      gildedRose.updateQuality()
+
+      expect(gildedRose.items).toMatchInlineSnapshot(`
+        Array [
+          Item {
+            "name": "Backstage passes to a TAFKAL80ETC concert",
+            "quality": 3,
+            "sellIn": 0,
+          },
+          Item {
+            "name": "Backstage passes to a TAFKAL80ETC concert",
+            "quality": 3,
+            "sellIn": 1,
+          },
+          Item {
+            "name": "Backstage passes to a TAFKAL80ETC concert",
+            "quality": 3,
+            "sellIn": 2,
+          },
+          Item {
+            "name": "Backstage passes to a TAFKAL80ETC concert",
+            "quality": 3,
+            "sellIn": 3,
+          },
+        ]
+      `)
+    })
+
+    it('should set `quality` of "Backstage passes" to 0, when `sellIn <= 0`', () => {
+      const items: Item[] = [
+        new Item(BACKSTAGE_PASSES, 1, 20),
+        new Item(BACKSTAGE_PASSES, 2, 20),
+        new Item(BACKSTAGE_PASSES, 3, 20),
+      ]
+      const gildedRose = new GildedRose(items)
+
+      gildedRose.updateQuality()
+      gildedRose.updateQuality()
+      gildedRose.updateQuality()
+      gildedRose.updateQuality()
+
+      expect(gildedRose.items).toMatchInlineSnapshot(`
+        Array [
+          Item {
+            "name": "Backstage passes to a TAFKAL80ETC concert",
+            "quality": 0,
+            "sellIn": -3,
+          },
+          Item {
+            "name": "Backstage passes to a TAFKAL80ETC concert",
+            "quality": 0,
+            "sellIn": -2,
+          },
+          Item {
+            "name": "Backstage passes to a TAFKAL80ETC concert",
+            "quality": 0,
+            "sellIn": -1,
+          },
+        ]
+      `)
+    })
   })
 })
