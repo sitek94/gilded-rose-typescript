@@ -6,7 +6,7 @@
 
 ### 1. Violated Rules 🤦
 
-Code: [attempt/1-violated-rules]()
+Code: [attempt/1-violated-rules](https://github.com/sitek94/gilded-rose-typescript/tree/attempt/1-violated-rules)
 
 The description says:
 
