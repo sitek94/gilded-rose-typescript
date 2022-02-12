@@ -6,112 +6,46 @@ import {
   SULFURAS,
 } from 'gilded-rose'
 
-/*
-  TODO: Consider creating helpers for tests setup, e.g.
-
-  const { items, waitDays } = setup([
-   createSulfuras(),
-   createCommonItem(5, 6)
-  ])
-
-  waitDays(3)
-
-  expect(items).toMatchInlineSnapshot('...')
- */
-
 describe('Gilded Rose', () => {
   describe('updateQuality()', () => {
     it('should decrease `sellIn` and `quality` by 1', () => {
-      const item: Item = new Item('common item', 5, 6)
+      const item: Item = new Item('common item', 5, 5)
       const gildedRose = new GildedRose([item])
 
       gildedRose.updateQuality()
-
-      expect(gildedRose.items[0]).toMatchInlineSnapshot(`
-        Item {
-          "name": "common item",
-          "quality": 5,
-          "sellIn": 4,
-        }
-      `)
+      expect(gildedRose.items[0].sellIn).toBe(4)
+      expect(gildedRose.items[0].quality).toBe(4)
 
       gildedRose.updateQuality()
-
-      expect(gildedRose.items[0]).toMatchInlineSnapshot(`
-        Item {
-          "name": "common item",
-          "quality": 4,
-          "sellIn": 3,
-        }
-      `)
+      expect(gildedRose.items[0].sellIn).toBe(3)
+      expect(gildedRose.items[0].quality).toBe(3)
     })
 
     it('should decrease `quality` by 2, when `sellIn <= 0`', () => {
-      const item: Item = new Item('common item', 1, 7)
+      const item: Item = new Item('common item', 0, 6)
       const gildedRose = new GildedRose([item])
 
       gildedRose.updateQuality()
-
-      expect(gildedRose.items[0]).toMatchInlineSnapshot(`
-        Item {
-          "name": "common item",
-          "quality": 6,
-          "sellIn": 0,
-        }
-      `)
+      expect(gildedRose.items[0].quality).toBe(4)
 
       gildedRose.updateQuality()
-
-      expect(gildedRose.items[0]).toMatchInlineSnapshot(`
-        Item {
-          "name": "common item",
-          "quality": 4,
-          "sellIn": -1,
-        }
-      `)
+      expect(gildedRose.items[0].quality).toBe(2)
 
       gildedRose.updateQuality()
-
-      expect(gildedRose.items[0]).toMatchInlineSnapshot(`
-        Item {
-          "name": "common item",
-          "quality": 2,
-          "sellIn": -2,
-        }
-      `)
+      expect(gildedRose.items[0].quality).toBe(0)
     })
 
     it('should NOT decrease `quality` below 0', () => {
-      const items: Item[] = [
-        new Item('common item 1', 3, 1),
-        new Item('common item 2', 1, 1),
-        new Item('common item 3', 0, 0),
-      ]
-      const gildedRose = new GildedRose(items)
+      const item: Item = new Item('common item', 1, 0)
+      const gildedRose = new GildedRose([item])
 
       gildedRose.updateQuality()
-      gildedRose.updateQuality()
-      gildedRose.updateQuality()
+      expect(gildedRose.items[0].quality).toBe(0)
+      expect(gildedRose.items[0].sellIn).toBe(0)
 
-      expect(gildedRose.items).toMatchInlineSnapshot(`
-        Array [
-          Item {
-            "name": "common item 1",
-            "quality": 0,
-            "sellIn": 0,
-          },
-          Item {
-            "name": "common item 2",
-            "quality": 0,
-            "sellIn": -2,
-          },
-          Item {
-            "name": "common item 3",
-            "quality": 0,
-            "sellIn": -3,
-          },
-        ]
-      `)
+      gildedRose.updateQuality()
+      expect(gildedRose.items[0].quality).toBe(0)
+      expect(gildedRose.items[0].sellIn).toBe(-1)
     })
 
     it('should increase `quality` of "Aged Brie" by 1', () => {
@@ -119,17 +53,10 @@ describe('Gilded Rose', () => {
       const gildedRose = new GildedRose([item])
 
       gildedRose.updateQuality()
-      gildedRose.updateQuality()
-      gildedRose.updateQuality()
-      gildedRose.updateQuality()
+      expect(gildedRose.items[0].quality).toBe(1)
 
-      expect(gildedRose.items[0]).toMatchInlineSnapshot(`
-        Item {
-          "name": "Aged Brie",
-          "quality": 4,
-          "sellIn": 2,
-        }
-      `)
+      gildedRose.updateQuality()
+      expect(gildedRose.items[0].quality).toBe(2)
     })
 
     it('should increase `quality` of "Aged Brie" by 2, when `sellIn <= 0`', () => {
@@ -137,220 +64,118 @@ describe('Gilded Rose', () => {
       const gildedRose = new GildedRose([item])
 
       gildedRose.updateQuality()
-      gildedRose.updateQuality()
-      gildedRose.updateQuality()
-      gildedRose.updateQuality()
+      expect(gildedRose.items[0].quality).toBe(2)
 
-      expect(gildedRose.items[0]).toMatchInlineSnapshot(`
-        Item {
-          "name": "Aged Brie",
-          "quality": 8,
-          "sellIn": -4,
-        }
-      `)
+      gildedRose.updateQuality()
+      expect(gildedRose.items[0].quality).toBe(4)
+
+      gildedRose.updateQuality()
+      expect(gildedRose.items[0].quality).toBe(6)
+
+      gildedRose.updateQuality()
+      expect(gildedRose.items[0].quality).toBe(8)
     })
 
     it('should NOT increase `quality` above 50', () => {
-      const items: Item[] = [
-        new Item(AGED_BRIE, 1, 49),
-        new Item(AGED_BRIE, 0, 49),
-        new Item(AGED_BRIE, 0, 50),
-      ]
-      const gildedRose = new GildedRose(items)
+      const item: Item = new Item(AGED_BRIE, 0, 49)
+      const gildedRose = new GildedRose([item])
 
       gildedRose.updateQuality()
-      gildedRose.updateQuality()
-      gildedRose.updateQuality()
+      expect(gildedRose.items[0].quality).toBe(50)
 
-      expect(gildedRose.items).toMatchInlineSnapshot(`
-        Array [
-          Item {
-            "name": "Aged Brie",
-            "quality": 50,
-            "sellIn": -2,
-          },
-          Item {
-            "name": "Aged Brie",
-            "quality": 50,
-            "sellIn": -3,
-          },
-          Item {
-            "name": "Aged Brie",
-            "quality": 50,
-            "sellIn": -3,
-          },
-        ]
-      `)
+      gildedRose.updateQuality()
+      expect(gildedRose.items[0].quality).toBe(50)
     })
 
     it('should NOT decrease `sellIn` and `quality` of "Sulfuras"', () => {
-      const items: Item[] = [
-        new Item(SULFURAS, 0, 80),
-        new Item(SULFURAS, -1, 80),
-      ]
-      const gildedRose = new GildedRose(items)
+      const item: Item = new Item(SULFURAS, 0, 80)
+      const gildedRose = new GildedRose([item])
 
       gildedRose.updateQuality()
-
-      expect(gildedRose.items).toMatchInlineSnapshot(`
-        Array [
-          Item {
-            "name": "Sulfuras, Hand of Ragnaros",
-            "quality": 80,
-            "sellIn": 0,
-          },
-          Item {
-            "name": "Sulfuras, Hand of Ragnaros",
-            "quality": 80,
-            "sellIn": -1,
-          },
-        ]
-      `)
+      expect(gildedRose.items[0].sellIn).toBe(0)
+      expect(gildedRose.items[0].quality).toBe(80)
     })
 
     it('should increase `quality` of "Backstage passes" by 1, when `sellIn > 10`', () => {
-      const items: Item[] = [
-        new Item(BACKSTAGE_PASSES, 11, 0),
-        new Item(BACKSTAGE_PASSES, 12, 0),
-        new Item(BACKSTAGE_PASSES, 13, 0),
-      ]
-      const gildedRose = new GildedRose(items)
+      const item: Item = new Item(BACKSTAGE_PASSES, 13, 0)
+      const gildedRose = new GildedRose([item])
 
       gildedRose.updateQuality()
+      expect(gildedRose.items[0].sellIn).toBe(12)
+      expect(gildedRose.items[0].quality).toBe(1)
 
-      expect(gildedRose.items).toMatchInlineSnapshot(`
-        Array [
-          Item {
-            "name": "Backstage passes to a TAFKAL80ETC concert",
-            "quality": 1,
-            "sellIn": 10,
-          },
-          Item {
-            "name": "Backstage passes to a TAFKAL80ETC concert",
-            "quality": 1,
-            "sellIn": 11,
-          },
-          Item {
-            "name": "Backstage passes to a TAFKAL80ETC concert",
-            "quality": 1,
-            "sellIn": 12,
-          },
-        ]
-      `)
+      gildedRose.updateQuality()
+      expect(gildedRose.items[0].sellIn).toBe(11)
+      expect(gildedRose.items[0].quality).toBe(2)
+
+      gildedRose.updateQuality()
+      expect(gildedRose.items[0].sellIn).toBe(10)
+      expect(gildedRose.items[0].quality).toBe(3)
+
+      gildedRose.updateQuality()
+      expect(gildedRose.items[0].sellIn).toBe(9)
+      expect(gildedRose.items[0].quality).not.toBe(4)
     })
 
     it('should increase `quality` of "Backstage passes" by 2, when `5 < sellIn <= 10`', () => {
-      const items: Item[] = [
-        new Item(BACKSTAGE_PASSES, 6, 0),
-        new Item(BACKSTAGE_PASSES, 7, 0),
-        new Item(BACKSTAGE_PASSES, 8, 0),
-        new Item(BACKSTAGE_PASSES, 9, 0),
-        new Item(BACKSTAGE_PASSES, 10, 0),
-      ]
-      const gildedRose = new GildedRose(items)
+      const item: Item = new Item(BACKSTAGE_PASSES, 10, 0)
+      const gildedRose = new GildedRose([item])
 
       gildedRose.updateQuality()
+      expect(gildedRose.items[0].sellIn).toBe(9)
+      expect(gildedRose.items[0].quality).toBe(2)
+      gildedRose.updateQuality()
+      expect(gildedRose.items[0].sellIn).toBe(8)
+      expect(gildedRose.items[0].quality).toBe(4)
 
-      expect(gildedRose.items).toMatchInlineSnapshot(`
-        Array [
-          Item {
-            "name": "Backstage passes to a TAFKAL80ETC concert",
-            "quality": 2,
-            "sellIn": 5,
-          },
-          Item {
-            "name": "Backstage passes to a TAFKAL80ETC concert",
-            "quality": 2,
-            "sellIn": 6,
-          },
-          Item {
-            "name": "Backstage passes to a TAFKAL80ETC concert",
-            "quality": 2,
-            "sellIn": 7,
-          },
-          Item {
-            "name": "Backstage passes to a TAFKAL80ETC concert",
-            "quality": 2,
-            "sellIn": 8,
-          },
-          Item {
-            "name": "Backstage passes to a TAFKAL80ETC concert",
-            "quality": 2,
-            "sellIn": 9,
-          },
-        ]
-      `)
+      gildedRose.updateQuality()
+      expect(gildedRose.items[0].sellIn).toBe(7)
+      expect(gildedRose.items[0].quality).toBe(6)
+
+      gildedRose.updateQuality()
+      expect(gildedRose.items[0].sellIn).toBe(6)
+      expect(gildedRose.items[0].quality).not.toBe(6)
+
+      gildedRose.updateQuality()
+      expect(gildedRose.items[0].sellIn).toBe(5)
+      expect(gildedRose.items[0].quality).not.toBe(8)
     })
 
     it('should increase `quality` of "Backstage passes" by 3 when `0 < sellIn <= 5``', () => {
-      const items: Item[] = [
-        new Item(BACKSTAGE_PASSES, 1, 0),
-        new Item(BACKSTAGE_PASSES, 2, 0),
-        new Item(BACKSTAGE_PASSES, 3, 0),
-        new Item(BACKSTAGE_PASSES, 4, 0),
-      ]
-      const gildedRose = new GildedRose(items)
+      const item: Item = new Item(BACKSTAGE_PASSES, 5, 0)
+      const gildedRose = new GildedRose([item])
 
       gildedRose.updateQuality()
+      expect(gildedRose.items[0].sellIn).toBe(4)
+      expect(gildedRose.items[0].quality).toBe(3)
+      gildedRose.updateQuality()
+      expect(gildedRose.items[0].sellIn).toBe(3)
+      expect(gildedRose.items[0].quality).toBe(6)
 
-      expect(gildedRose.items).toMatchInlineSnapshot(`
-        Array [
-          Item {
-            "name": "Backstage passes to a TAFKAL80ETC concert",
-            "quality": 3,
-            "sellIn": 0,
-          },
-          Item {
-            "name": "Backstage passes to a TAFKAL80ETC concert",
-            "quality": 3,
-            "sellIn": 1,
-          },
-          Item {
-            "name": "Backstage passes to a TAFKAL80ETC concert",
-            "quality": 3,
-            "sellIn": 2,
-          },
-          Item {
-            "name": "Backstage passes to a TAFKAL80ETC concert",
-            "quality": 3,
-            "sellIn": 3,
-          },
-        ]
-      `)
+      gildedRose.updateQuality()
+      expect(gildedRose.items[0].sellIn).toBe(2)
+      expect(gildedRose.items[0].quality).toBe(9)
+
+      gildedRose.updateQuality()
+      expect(gildedRose.items[0].sellIn).toBe(1)
+      expect(gildedRose.items[0].quality).toBe(12)
+
+      gildedRose.updateQuality()
+      expect(gildedRose.items[0].sellIn).toBe(0)
+      expect(gildedRose.items[0].quality).toBe(15)
+
+      gildedRose.updateQuality()
+      expect(gildedRose.items[0].sellIn).toBe(-1)
+      expect(gildedRose.items[0].quality).not.toBe(18)
     })
 
     it('should set `quality` of "Backstage passes" to 0, when `sellIn <= 0`', () => {
-      const items: Item[] = [
-        new Item(BACKSTAGE_PASSES, 1, 20),
-        new Item(BACKSTAGE_PASSES, 2, 20),
-        new Item(BACKSTAGE_PASSES, 3, 20),
-      ]
-      const gildedRose = new GildedRose(items)
+      const item: Item = new Item(BACKSTAGE_PASSES, 0, 10)
+      const gildedRose = new GildedRose([item])
 
       gildedRose.updateQuality()
-      gildedRose.updateQuality()
-      gildedRose.updateQuality()
-      gildedRose.updateQuality()
-
-      expect(gildedRose.items).toMatchInlineSnapshot(`
-        Array [
-          Item {
-            "name": "Backstage passes to a TAFKAL80ETC concert",
-            "quality": 0,
-            "sellIn": -3,
-          },
-          Item {
-            "name": "Backstage passes to a TAFKAL80ETC concert",
-            "quality": 0,
-            "sellIn": -2,
-          },
-          Item {
-            "name": "Backstage passes to a TAFKAL80ETC concert",
-            "quality": 0,
-            "sellIn": -1,
-          },
-        ]
-      `)
+      expect(gildedRose.items[0].sellIn).toBe(-1)
+      expect(gildedRose.items[0].quality).toBe(0)
     })
   })
 })
