@@ -1,6 +1,7 @@
 import {
   AGED_BRIE,
   BACKSTAGE_PASSES,
+  CONJURED,
   GildedRose,
   Item,
   SULFURAS,
@@ -8,7 +9,7 @@ import {
 
 describe('Gilded Rose', () => {
   describe('updateQuality()', () => {
-    it('should decrease `sellIn` and `quality` by 1', () => {
+    it('should decrease `sellIn` and `quality` by 1, when `sellIn > 0`', () => {
       const item: Item = new Item('common item', 5, 5)
       const gildedRose = new GildedRose([item])
 
@@ -175,6 +176,32 @@ describe('Gilded Rose', () => {
 
       gildedRose.updateQuality()
       expect(gildedRose.items[0].sellIn).toBe(-1)
+      expect(gildedRose.items[0].quality).toBe(0)
+    })
+
+    it('should decrease `quality` of "Conjured" item by 2, when `sellIn > 0`', () => {
+      const item: Item = new Item(CONJURED, 4, 10)
+      const gildedRose = new GildedRose([item])
+
+      gildedRose.updateQuality()
+      expect(gildedRose.items[0].quality).toBe(8)
+      gildedRose.updateQuality()
+      expect(gildedRose.items[0].quality).toBe(6)
+      gildedRose.updateQuality()
+      expect(gildedRose.items[0].quality).toBe(4)
+      gildedRose.updateQuality()
+      expect(gildedRose.items[0].quality).toBe(2)
+    })
+
+    it('should decrease `quality` of "Conjured" item by 4, when `sellIn <= 0`', () => {
+      const item: Item = new Item(CONJURED, 0, 12)
+      const gildedRose = new GildedRose([item])
+
+      gildedRose.updateQuality()
+      expect(gildedRose.items[0].quality).toBe(8)
+      gildedRose.updateQuality()
+      expect(gildedRose.items[0].quality).toBe(4)
+      gildedRose.updateQuality()
       expect(gildedRose.items[0].quality).toBe(0)
     })
   })
