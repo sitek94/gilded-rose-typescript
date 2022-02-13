@@ -28,6 +28,8 @@ Copying her solution 1-to-1 is not possible, for number of reasons:
    - Her `GildedRose` class doesn't have `items` that it iterates over, there is just one item being handled.
    - Some edge cases are not handled, e.g. in her implementation it'd be possible to increment the quality "Aged Brie"
      to 51.
+   - In her version a normal/common item has property name of "normal", whereas in original Kata, any item which name is
+     not "Aged Brie", "Backstage passes", "Sulfuras" or "Conjured" is considered normal.
 
 
 ## Resources

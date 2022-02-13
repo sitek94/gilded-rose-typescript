@@ -18,11 +18,19 @@ export class Item {
 }
 
 export class GildedRose {
+  DEFAULT_CLASS = Common
+  SPECIALIZED_CLASSES = {
+    [AGED_BRIE]: AgedBrie,
+    [BACKSTAGE_PASSES]: BackstagePasses,
+    [CONJURED]: Conjured,
+    [SULFURAS]: Sulfuras,
+  }
+
   items: Item[]
 
   constructor(items: Item[] = []) {
     this.items = items.map(({ name, sellIn, quality }) => {
-      const Class = this.getClassFor(name)
+      const Class = this.SPECIALIZED_CLASSES[name] || this.DEFAULT_CLASS
       return new Class(name, sellIn, quality)
     })
   }
@@ -30,28 +38,9 @@ export class GildedRose {
   updateQuality() {
     this.items.forEach((item) => item.updateQuality())
   }
-
-  getClassFor(name: string) {
-    switch (name) {
-      case AGED_BRIE:
-        return AgedBrie
-
-      case BACKSTAGE_PASSES:
-        return BackstagePasses
-
-      case CONJURED:
-        return Conjured
-
-      case SULFURAS:
-        return Sulfuras
-
-      default:
-        return Normal
-    }
-  }
 }
 
-class Normal extends Item {
+class Common extends Item {
   updateQuality() {
     this.sellIn--
 
@@ -107,9 +96,7 @@ class BackstagePasses extends Item {
   }
 }
 
-class Sulfuras extends Item {
-  updateQuality() {}
-}
+class Sulfuras extends Item {}
 
 class Conjured extends Item {
   updateQuality() {
