@@ -23,81 +23,111 @@ export class GildedRose {
   }
 
   updateQuality() {
-    this.items.forEach((item) => {
+    for (let i = 0; i < this.items.length; i++) {
+      const item = this.items[i]
+      const { name, sellIn, quality } = item
+
+      // TODO: A lot of duplication here, take care of it in the next step
+
       switch (item.name) {
         case AGED_BRIE:
-          return this.updateAgedBrieItem(item)
+          const agedBrieItem = new AgedBrie(name, sellIn, quality)
+          agedBrieItem.updateQuality()
+          this.items[i] = agedBrieItem
+          break
 
         case SULFURAS:
-          return this.updateSulfurasItem()
+          break
 
         case BACKSTAGE_PASSES:
-          return this.updateBackstagePassesItem(item)
+          const backstagePassesItem = new BackstagePasses(name, sellIn, quality)
+          backstagePassesItem.updateQuality()
+          this.items[i] = backstagePassesItem
+          break
 
         case CONJURED:
-          return this.updateConjuredItem(item)
+          const conjuredItem = new Conjured(name, sellIn, quality)
+          conjuredItem.updateQuality()
+          this.items[i] = conjuredItem
+          break
 
         default:
-          return this.updateNormalItem(item)
+          const normalItem = new Normal(name, sellIn, quality)
+          normalItem.updateQuality()
+          this.items[i] = normalItem
       }
-    })
+    }
 
     return this.items
   }
+}
 
-  updateNormalItem(item: Item) {
-    item.sellIn--
+class Normal extends Item {
+  updateQuality() {
+    this.sellIn--
 
-    if (item.quality > 0) {
-      item.quality--
+    if (this.canDecreaseQuality()) {
+      this.quality--
     }
-    if (item.sellIn < 0 && item.quality > 0) {
-      item.quality--
-    }
-  }
-
-  updateAgedBrieItem(item: Item) {
-    item.sellIn--
-
-    if (item.quality < 50) {
-      item.quality++
-    }
-
-    if (item.sellIn < 0 && item.quality < 50) {
-      item.quality++
+    if (this.hasExpired() && this.canDecreaseQuality()) {
+      this.quality--
     }
   }
 
-  updateSulfurasItem() {}
-
-  updateBackstagePassesItem(item: Item) {
-    item.sellIn--
-    if (item.sellIn < 0) {
-      return (item.quality = 0)
-    }
-
-    if (item.quality < 50) {
-      item.quality++
-    }
-
-    if (item.sellIn < 10 && item.quality < 50) {
-      item.quality++
-    }
-
-    if (item.sellIn < 5 && item.quality < 50) {
-      item.quality++
-    }
+  canDecreaseQuality() {
+    return this.quality > 0
   }
 
-  updateConjuredItem(item: Item) {
-    item.sellIn--
+  hasExpired() {
+    return this.sellIn < 0
+  }
+}
 
-    if (item.quality > 0) {
-      item.quality -= 2
+class AgedBrie extends Item {
+  updateQuality() {
+    this.sellIn--
+
+    if (this.quality < 50) {
+      this.quality++
     }
 
-    if (item.sellIn < 0 && item.quality > 0) {
-      item.quality -= 2
+    if (this.sellIn < 0 && this.quality < 50) {
+      this.quality++
+    }
+  }
+}
+
+class BackstagePasses extends Item {
+  updateQuality() {
+    this.sellIn--
+    if (this.sellIn < 0) {
+      return (this.quality = 0)
+    }
+
+    if (this.quality < 50) {
+      this.quality++
+    }
+
+    if (this.sellIn < 10 && this.quality < 50) {
+      this.quality++
+    }
+
+    if (this.sellIn < 5 && this.quality < 50) {
+      this.quality++
+    }
+  }
+}
+
+class Conjured extends Item {
+  updateQuality() {
+    this.sellIn--
+
+    if (this.quality > 0) {
+      this.quality -= 2
+    }
+
+    if (this.sellIn < 0 && this.quality > 0) {
+      this.quality -= 2
     }
   }
 }
