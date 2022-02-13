@@ -13,52 +13,41 @@ export class Item {
     this.sellIn = sellIn
     this.quality = quality
   }
+
+  updateQuality() {}
 }
 
 export class GildedRose {
-  items: Array<Item>
+  items: Item[]
 
-  constructor(items = [] as Array<Item>) {
-    this.items = items
+  constructor(items: Item[] = []) {
+    this.items = items.map(({ name, sellIn, quality }) => {
+      const Class = this.getClassFor(name)
+      return new Class(name, sellIn, quality)
+    })
   }
 
   updateQuality() {
-    for (let i = 0; i < this.items.length; i++) {
-      const item = this.items[i]
-      const { name, sellIn, quality } = item
+    this.items.forEach((item) => item.updateQuality())
+  }
 
-      // TODO: A lot of duplication here, take care of it in the next step
+  getClassFor(name: string) {
+    switch (name) {
+      case AGED_BRIE:
+        return AgedBrie
 
-      switch (item.name) {
-        case AGED_BRIE:
-          const agedBrieItem = new AgedBrie(name, sellIn, quality)
-          agedBrieItem.updateQuality()
-          this.items[i] = agedBrieItem
-          break
+      case BACKSTAGE_PASSES:
+        return BackstagePasses
 
-        case SULFURAS:
-          break
+      case CONJURED:
+        return Conjured
 
-        case BACKSTAGE_PASSES:
-          const backstagePassesItem = new BackstagePasses(name, sellIn, quality)
-          backstagePassesItem.updateQuality()
-          this.items[i] = backstagePassesItem
-          break
+      case SULFURAS:
+        return Sulfuras
 
-        case CONJURED:
-          const conjuredItem = new Conjured(name, sellIn, quality)
-          conjuredItem.updateQuality()
-          this.items[i] = conjuredItem
-          break
-
-        default:
-          const normalItem = new Normal(name, sellIn, quality)
-          normalItem.updateQuality()
-          this.items[i] = normalItem
-      }
+      default:
+        return Normal
     }
-
-    return this.items
   }
 }
 
@@ -116,6 +105,10 @@ class BackstagePasses extends Item {
       this.quality++
     }
   }
+}
+
+class Sulfuras extends Item {
+  updateQuality() {}
 }
 
 class Conjured extends Item {
