@@ -10,16 +10,26 @@ import {
 describe('Gilded Rose', () => {
   describe('updateQuality()', () => {
     it('should decrease `sellIn` and `quality` by 1, when `sellIn > 0`', () => {
-      const item: Item = new Item('common item', 5, 5)
+      const item: Item = new Item('common item', 3, 10)
       const gildedRose = new GildedRose([item])
 
       gildedRose.updateQuality()
-      expect(gildedRose.items[0].sellIn).toBe(4)
-      expect(gildedRose.items[0].quality).toBe(4)
+      expect(gildedRose.items[0].sellIn).toBe(2)
+      expect(gildedRose.items[0].quality).toBe(9)
 
       gildedRose.updateQuality()
-      expect(gildedRose.items[0].sellIn).toBe(3)
-      expect(gildedRose.items[0].quality).toBe(3)
+      expect(gildedRose.items[0].sellIn).toBe(1)
+      expect(gildedRose.items[0].quality).toBe(8)
+
+      gildedRose.updateQuality()
+      expect(gildedRose.items[0].sellIn).toBe(0)
+      expect(gildedRose.items[0].quality).toBe(7)
+
+      gildedRose.updateQuality()
+      expect(gildedRose.items[0].sellIn).toBe(-1)
+      // `sellIn` is not greater than 0, so `quality` should not be decreased
+      // by 1 anymore
+      expect(gildedRose.items[0].quality).not.toBe(6)
     })
 
     it('should decrease `quality` by 2, when `sellIn <= 0`', () => {
@@ -179,7 +189,7 @@ describe('Gilded Rose', () => {
       expect(gildedRose.items[0].quality).toBe(0)
     })
 
-    it.skip('should decrease `quality` of "Conjured" item by 2, when `sellIn > 0`', () => {
+    it('should decrease `quality` of "Conjured" item by 2, when `sellIn > 0`', () => {
       const item: Item = new Item(CONJURED, 4, 10)
       const gildedRose = new GildedRose([item])
 
@@ -193,7 +203,7 @@ describe('Gilded Rose', () => {
       expect(gildedRose.items[0].quality).toBe(2)
     })
 
-    it.skip('should decrease `quality` of "Conjured" item by 4, when `sellIn <= 0`', () => {
+    it('should decrease `quality` of "Conjured" item by 4, when `sellIn <= 0`', () => {
       const item: Item = new Item(CONJURED, 0, 12)
       const gildedRose = new GildedRose([item])
 
