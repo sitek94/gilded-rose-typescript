@@ -4,9 +4,9 @@
 
 ## Attempts
 
-### 1. Violated Rules 🤦
+### 1. Violated Rules
 
-Code: [attempt/1-violated-rules](https://github.com/sitek94/gilded-rose-typescript/tree/attempt/1-violated-rules)
+Code: [Attempt 1](https://github.com/sitek94/gilded-rose-typescript/tree/main/src/attempt-1)
 
 The description says:
 
@@ -20,6 +20,8 @@ Conjured Item implementation works, but I'm not really happy with this solution.
 
 ### 2. Heavily inspired by Sandi Metz
 
+Code: [Attempt 2](https://github.com/sitek94/gilded-rose-typescript/tree/main/src/attempt-2)
+
 In this approach I tried to apply what I learned by watching the [talk by Sandi Metz](https://youtu.be/8bZh5LMaSmE). 
 Copying her solution 1-to-1 is not possible, for number of reasons:
 1. She uses Ruby, not TypeScript.
@@ -30,7 +32,6 @@ Copying her solution 1-to-1 is not possible, for number of reasons:
      to 51.
    - In her version a normal/common item has property name of "normal", whereas in original Kata, any item which name is
      not "Aged Brie", "Backstage passes", "Sulfuras" or "Conjured" is considered normal.
-
 
 ## Resources
 
