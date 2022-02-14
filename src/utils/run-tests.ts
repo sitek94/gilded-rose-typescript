@@ -1,16 +1,10 @@
-import {
-  AGED_BRIE,
-  BACKSTAGE_PASSES,
-  CONJURED,
-  GildedRose,
-  Item,
-  SULFURAS,
-} from 'gilded-rose'
+import type { GildedRose, Item } from 'types'
+import { ItemName } from 'types'
 
-describe('Gilded Rose', () => {
-  describe('updateQuality()', () => {
+export function runTests(GildedRose: GildedRose, Item: Item) {
+  describe('Gilded Rose', () => {
     it('should decrease `sellIn` and `quality` by 1, when `sellIn > 0`', () => {
-      const item: Item = new Item('common item', 3, 10)
+      const item = new Item('common item', 3, 10)
       const gildedRose = new GildedRose([item])
 
       gildedRose.updateQuality()
@@ -33,7 +27,7 @@ describe('Gilded Rose', () => {
     })
 
     it('should decrease `quality` by 2, when `sellIn <= 0`', () => {
-      const item: Item = new Item('common item', 0, 6)
+      const item = new Item('common item', 0, 6)
       const gildedRose = new GildedRose([item])
 
       gildedRose.updateQuality()
@@ -47,7 +41,7 @@ describe('Gilded Rose', () => {
     })
 
     it('should NOT decrease `quality` below 0', () => {
-      const item: Item = new Item('common item', 1, 0)
+      const item = new Item('common item', 1, 0)
       const gildedRose = new GildedRose([item])
 
       gildedRose.updateQuality()
@@ -60,7 +54,7 @@ describe('Gilded Rose', () => {
     })
 
     it('should increase `quality` of "Aged Brie" by 1', () => {
-      const item: Item = new Item(AGED_BRIE, 6, 0)
+      const item = new Item(ItemName.AgedBrie, 6, 0)
       const gildedRose = new GildedRose([item])
 
       gildedRose.updateQuality()
@@ -71,7 +65,7 @@ describe('Gilded Rose', () => {
     })
 
     it('should increase `quality` of "Aged Brie" by 2, when `sellIn <= 0`', () => {
-      const item: Item = new Item(AGED_BRIE, 0, 0)
+      const item = new Item(ItemName.AgedBrie, 0, 0)
       const gildedRose = new GildedRose([item])
 
       gildedRose.updateQuality()
@@ -88,7 +82,7 @@ describe('Gilded Rose', () => {
     })
 
     it('should NOT increase `quality` above 50', () => {
-      const item: Item = new Item(AGED_BRIE, 0, 49)
+      const item = new Item(ItemName.AgedBrie, 0, 49)
       const gildedRose = new GildedRose([item])
 
       gildedRose.updateQuality()
@@ -99,7 +93,7 @@ describe('Gilded Rose', () => {
     })
 
     it('should NOT decrease `sellIn` and `quality` of "Sulfuras"', () => {
-      const item: Item = new Item(SULFURAS, 0, 80)
+      const item = new Item(ItemName.Sulfuras, 0, 80)
       const gildedRose = new GildedRose([item])
 
       gildedRose.updateQuality()
@@ -108,7 +102,7 @@ describe('Gilded Rose', () => {
     })
 
     it('should increase `quality` of "Backstage passes" by 1, when `sellIn > 10`', () => {
-      const item: Item = new Item(BACKSTAGE_PASSES, 13, 0)
+      const item = new Item(ItemName.BackstagePasses, 13, 0)
       const gildedRose = new GildedRose([item])
 
       gildedRose.updateQuality()
@@ -129,7 +123,7 @@ describe('Gilded Rose', () => {
     })
 
     it('should increase `quality` of "Backstage passes" by 2, when `5 < sellIn <= 10`', () => {
-      const item: Item = new Item(BACKSTAGE_PASSES, 10, 0)
+      const item = new Item(ItemName.BackstagePasses, 10, 0)
       const gildedRose = new GildedRose([item])
 
       gildedRose.updateQuality()
@@ -153,7 +147,7 @@ describe('Gilded Rose', () => {
     })
 
     it('should increase `quality` of "Backstage passes" by 3 when `0 < sellIn <= 5``', () => {
-      const item: Item = new Item(BACKSTAGE_PASSES, 5, 0)
+      const item = new Item(ItemName.BackstagePasses, 5, 0)
       const gildedRose = new GildedRose([item])
 
       gildedRose.updateQuality()
@@ -181,7 +175,7 @@ describe('Gilded Rose', () => {
     })
 
     it('should set `quality` of "Backstage passes" to 0, when `sellIn <= 0`', () => {
-      const item: Item = new Item(BACKSTAGE_PASSES, 0, 10)
+      const item = new Item(ItemName.BackstagePasses, 0, 10)
       const gildedRose = new GildedRose([item])
 
       gildedRose.updateQuality()
@@ -190,7 +184,7 @@ describe('Gilded Rose', () => {
     })
 
     it('should decrease `quality` of "Conjured" item by 2, when `sellIn > 0`', () => {
-      const item: Item = new Item(CONJURED, 4, 10)
+      const item = new Item(ItemName.Conjured, 4, 10)
       const gildedRose = new GildedRose([item])
 
       gildedRose.updateQuality()
@@ -204,7 +198,7 @@ describe('Gilded Rose', () => {
     })
 
     it('should decrease `quality` of "Conjured" item by 4, when `sellIn <= 0`', () => {
-      const item: Item = new Item(CONJURED, 0, 12)
+      const item = new Item(ItemName.Conjured, 0, 12)
       const gildedRose = new GildedRose([item])
 
       gildedRose.updateQuality()
@@ -215,4 +209,4 @@ describe('Gilded Rose', () => {
       expect(gildedRose.items[0].quality).toBe(0)
     })
   })
-})
+}

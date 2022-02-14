@@ -2,7 +2,6 @@
   "name": "gilded-rose-typescript",
   "scripts": {
     "test": "jest --watch",
-    "text": "ts-node src/golden-master-text-test.ts",
     "format": "prettier --ignore-path .gitignore --write --plugin-search-dir=. ."
   },
   "devDependencies": {

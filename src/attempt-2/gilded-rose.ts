@@ -1,7 +1,4 @@
-export const AGED_BRIE = 'Aged Brie'
-export const SULFURAS = 'Sulfuras, Hand of Ragnaros'
-export const BACKSTAGE_PASSES = 'Backstage passes to a TAFKAL80ETC concert'
-export const CONJURED = 'Conjured Mana Cake'
+import { ItemName } from 'types'
 
 export class Item {
   name: string
@@ -20,10 +17,10 @@ export class Item {
 export class GildedRose {
   DEFAULT_CLASS = Common
   SPECIALIZED_CLASSES = {
-    [AGED_BRIE]: AgedBrie,
-    [BACKSTAGE_PASSES]: BackstagePasses,
-    [CONJURED]: Conjured,
-    [SULFURAS]: Sulfuras,
+    [ItemName.AgedBrie]: AgedBrie,
+    [ItemName.BackstagePasses]: BackstagePasses,
+    [ItemName.Conjured]: Conjured,
+    [ItemName.Sulfuras]: Sulfuras,
   }
 
   items: Item[]
@@ -78,21 +75,37 @@ class AgedBrie extends Item {
 class BackstagePasses extends Item {
   updateQuality() {
     this.sellIn--
-    if (this.sellIn < 0) {
+    if (this.hasExpired()) {
       return (this.quality = 0)
     }
 
-    if (this.quality < 50) {
+    this.increaseQualityIfNotMax()
+
+    if (this.sellIn < 10 && this.canIncreaseQuality()) {
       this.quality++
     }
 
-    if (this.sellIn < 10 && this.quality < 50) {
+    if (this.sellIn < 5 && this.canIncreaseQuality()) {
       this.quality++
     }
+  }
 
-    if (this.sellIn < 5 && this.quality < 50) {
+  isMaxQuality() {
+    return this.quality === 50
+  }
+
+  increaseQualityIfNotMax() {
+    if (!this.isMaxQuality()) {
       this.quality++
     }
+  }
+
+  canIncreaseQuality() {
+    return this.quality < 50
+  }
+
+  hasExpired() {
+    return this.sellIn < 0
   }
 }
 
