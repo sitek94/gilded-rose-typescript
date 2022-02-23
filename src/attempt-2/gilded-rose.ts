@@ -16,7 +16,7 @@ export class Item {
 
 export class GildedRose {
   DEFAULT_CLASS = Common
-  SPECIALIZED_CLASSES = {
+  SPECIALIZED_CLASSES: { [key: string]: typeof Item } = {
     [ItemName.AgedBrie]: AgedBrie,
     [ItemName.BackstagePasses]: BackstagePasses,
     [ItemName.Conjured]: Conjured,
@@ -42,10 +42,10 @@ class Common extends Item {
     this.sellIn--
 
     if (this.canDecreaseQuality()) {
-      this.quality--
+      this.decreaseQuality()
     }
-    if (this.hasExpired() && this.canDecreaseQuality()) {
-      this.quality--
+    if (this.sellIn < 0 && this.canDecreaseQuality()) {
+      this.decreaseQuality()
     }
   }
 
@@ -53,8 +53,8 @@ class Common extends Item {
     return this.quality > 0
   }
 
-  hasExpired() {
-    return this.sellIn < 0
+  decreaseQuality() {
+    this.quality--
   }
 }
 
@@ -62,41 +62,12 @@ class AgedBrie extends Item {
   updateQuality() {
     this.sellIn--
 
-    if (this.quality < 50) {
-      this.quality++
+    if (this.canIncreaseQuality()) {
+      this.increaseQuality()
     }
 
-    if (this.sellIn < 0 && this.quality < 50) {
-      this.quality++
-    }
-  }
-}
-
-class BackstagePasses extends Item {
-  updateQuality() {
-    this.sellIn--
-    if (this.hasExpired()) {
-      return (this.quality = 0)
-    }
-
-    this.increaseQualityIfNotMax()
-
-    if (this.sellIn < 10 && this.canIncreaseQuality()) {
-      this.quality++
-    }
-
-    if (this.sellIn < 5 && this.canIncreaseQuality()) {
-      this.quality++
-    }
-  }
-
-  isMaxQuality() {
-    return this.quality === 50
-  }
-
-  increaseQualityIfNotMax() {
-    if (!this.isMaxQuality()) {
-      this.quality++
+    if (this.sellIn < 0 && this.canIncreaseQuality()) {
+      this.increaseQuality()
     }
   }
 
@@ -104,8 +75,39 @@ class BackstagePasses extends Item {
     return this.quality < 50
   }
 
-  hasExpired() {
-    return this.sellIn < 0
+  increaseQuality() {
+    this.quality++
+  }
+}
+
+class BackstagePasses extends Item {
+  updateQuality() {
+    this.sellIn--
+
+    if (this.sellIn < 0) {
+      this.quality = 0
+      return
+    }
+
+    if (this.canIncreaseQuality()) {
+      this.increaseQuality()
+    }
+
+    if (this.sellIn < 10 && this.canIncreaseQuality()) {
+      this.increaseQuality()
+    }
+
+    if (this.sellIn < 5 && this.canIncreaseQuality()) {
+      this.increaseQuality()
+    }
+  }
+
+  canIncreaseQuality() {
+    return this.quality < 50
+  }
+
+  increaseQuality() {
+    this.quality++
   }
 }
 
@@ -115,12 +117,20 @@ class Conjured extends Item {
   updateQuality() {
     this.sellIn--
 
-    if (this.quality > 0) {
-      this.quality -= 2
+    if (this.canDecreaseQuality()) {
+      this.decreaseQuality()
     }
 
-    if (this.sellIn < 0 && this.quality > 0) {
-      this.quality -= 2
+    if (this.sellIn < 0 && this.canDecreaseQuality()) {
+      this.decreaseQuality()
     }
+  }
+
+  canDecreaseQuality() {
+    return this.quality > 0
+  }
+
+  decreaseQuality() {
+    this.quality -= 2
   }
 }
